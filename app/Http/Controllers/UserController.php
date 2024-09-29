@@ -21,7 +21,10 @@ class UserController extends Controller
        'title' => 'Daftar user yang terdaftar dalam sistem'
    ];
    $activeMenu = 'user'; // set menu yang sedang aktif
-   return view('user.index', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
+   
+   $level = LevelModel::all(); //ambil data level untuk filter
+   
+   return view('user.index', ['breadcrumb' => $breadcrumb, 'page' => $page, 'level' => $level, 'activeMenu' => $activeMenu]);
    }
 
    // Ambil data user dalam bentuk json untuk datatables
@@ -29,6 +32,12 @@ class UserController extends Controller
    {
        $users = UserModel::select('user_id', 'username', 'nama', 'level_id')
            ->with('level');
+
+        // filter data user berdasarkan level_id
+        if ($request->level_id) {
+            $users->where('level_id', $request->level_id);
+        }
+
        return DataTables::of($users)
            // menambahkan kolom index / no urut (default nama kolom: DT_RowIndex)
            ->addIndexColumn()
@@ -128,7 +137,7 @@ class UserController extends Controller
         ]);
         return redirect('/user')->with("success", "Data user berhasil diubah");
     }
-    
+
     // Menghapus data user 
     public function destroy(string $id)
     {
