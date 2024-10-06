@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class LevelModel extends Model
 {
     protected $table = 'm_level';
-    protected $primarykey = 'level_id';
+    protected $primaryKey = 'level_id';
 
     protected $fillable = ['level_kode','level_nama'];
     public function user():HasMany{
