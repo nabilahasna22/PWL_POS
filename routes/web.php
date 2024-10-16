@@ -116,6 +116,10 @@ Route::group(['prefix' => 'supplier'], function () {
     Route::put('/{id}/update_ajax', [SupplierController::class, 'update_ajax']); // menyimpan perubahan data supplier via Ajax
     Route::get('/{id}/delete_ajax', [SupplierController::class, 'confirm_ajax']); // menampilkan konfirmasi hapus supplier via Ajax
     Route::delete('/{id}/delete_ajax', [SupplierController::class, 'delete_ajax']); // menghapus data supplier via Ajax
+    Route::get('/import', [SupplierController::class, 'import']);
+    Route::post('/import_ajax', [SupplierController::class, 'import_ajax']);
+    Route::get('/export_excel', [SupplierController::class, 'export_excel']); 
+    Route::get('/export_pdf', [SupplierController::class, 'export_pdf']); 
     Route::delete('/{id}', [SupplierController::class, 'destroy']); // menghapus data supplier
 });
 });

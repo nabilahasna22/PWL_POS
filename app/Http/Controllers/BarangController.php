@@ -18,7 +18,6 @@ class BarangController extends Controller
             'title' => 'Data Barang',
             'list'  => ['Home', 'Barang']
         ];
-
         $kategori = KategoriModel::select('kategori_id', 'kategoi_nama')->get();
         return view('barang.index', [
             'activeMenu'  => $activeMenu,
