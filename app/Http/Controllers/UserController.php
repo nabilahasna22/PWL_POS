@@ -50,7 +50,7 @@ class UserController extends Controller
                    . csrf_field() . method_field('DELETE') .
                    '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm
                    (\'Apakah Anda yakit menghapus data ini?\');">Hapus</button></form>';*/               
-                $btn = '<button onclick="modalAction(\''.url('/user/'. $user->user_id . '/show_ajax').'\')" class="btn btn-info btn-sm">Detail</button>';
+                $btn = '<a href="' . url('/user/' . $user->user_id) . '" class="btn btn-info btn-sm">Detail</a> ';
                 $btn .= '<button onclick="modalAction(\''.url('/user/'. $user->user_id . '/edit_ajax').'\')" class="btn btn-warning btn-sm">Edit</button>';
                 $btn .= '<button onclick="modalAction(\''.url('/user/'. $user->user_id . '/delete_ajax').'\')" class="btn btn-danger btn-sm">Hapus</button>';
                    
