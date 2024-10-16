@@ -93,8 +93,10 @@ Route::middleware(['authorize:ADM,MNG,STF,CUS'])->group(function () {
     Route::put('/{id}/update_ajax', [BarangController::class, 'update_ajax']); // menyimpan perubahan data barang via Ajax
     Route::get('/{id}/delete_ajax', [BarangController::class, 'confirm_ajax']); // menampilkan halaman konfirmasi hapus barang via Ajax
     Route::delete('/{id}/delete_ajax', [BarangController::class, 'delete_ajax']); // menghapus data barang via Ajax
+    Route::get('/import', [BarangController::class, 'import']);
+    Route::post('/import_ajax', [BarangController::class, 'import_ajax']);
     Route::delete('/{id}', [BarangController::class, 'destroy']); // menghapus data barang
-    });
+});
 });
 
 Route::middleware(['authorize:ADM,MNG'])->group(function () {
