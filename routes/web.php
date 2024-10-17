@@ -38,6 +38,10 @@ Route::middleware(['authorize:ADM'])->group(function () {
     Route::put('/level/{id}/update_ajax', [LevelController::class, 'update_ajax']); // menyimpan perubahan data level via AJAX
     Route::get('/level/{id}/delete_ajax', [LevelController::class, 'confirm_ajax']); // menampilkan konfirmasi penghapusan via AJAX
     Route::delete('/level/{id}/delete_ajax', [LevelController::class, 'delete_ajax']); // menghapus data level via AJAX
+    Route::get('/level/import', [LevelController::class, 'import']); //ajax form upload excel
+    Route::post('/level/import_ajax', [LevelController::class, 'import_ajax']); //ajax form upload excel
+    Route::get('/level/export_excel', [LevelController::class, 'export_excel']); //export excel
+    Route::get('/level/export_pdf', [LevelController::class, 'export_pdf']); //export excel
     Route::delete('/level/{id}', [LevelController::class, 'destroy']);   // menghapus data level
 });
 
