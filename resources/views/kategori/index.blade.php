@@ -6,7 +6,9 @@
         <div class="card-header">
             <h3 class="card-title">{{ $page->title }}</h3>
             <div class="card-tools">
-                <a class="btn btn-sm btn-primary mt-1" href="{{ url('kategori/create') }}">Tambah</a>
+                <button onclick="modalAction('{{ url('/kategori/import') }}')" class="btn btn-info">Import Data</button>
+                <a href="{{ url('/kategori/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export Excel</a>
+                <a href="{{ url('/kategori/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export PDF</a>
                 <button onclick="modalAction('{{ url('/kategori/create_ajax') }}')" class="btn btn-sm btn-success mt-1">Tambah Ajax</button>
             </div>
         </div>
@@ -94,9 +96,14 @@
                     searchable: false
                 }]
             });
-            // $('#kategori_id').on('change',function(){
-            //     dataKategori.ajax.reload();
-            // });
+            $('#table-kategori_filter input').unbind().bind().on('keyup', function(e) {
+                if (e.keyCode == 13) { // enter key
+                    dataKategori.search(this.value).draw();
+                }
+            });
+            $('.filter_kategori').change(function() {
+                dataKategori.draw();
+            });
         });
     </script>
 @endpush

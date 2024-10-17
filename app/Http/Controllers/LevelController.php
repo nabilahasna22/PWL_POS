@@ -287,7 +287,7 @@ class LevelController extends Controller
         $sheet->setCellValue('A1', 'No');
         $sheet->setCellValue('B1', 'Kode');
         $sheet->setCellValue('C1', 'Nama Level');
-        $sheet->getStyle('A1:F1')->getFont()->setBold(true); // bold header
+        $sheet->getStyle('A1:C1')->getFont()->setBold(true); // bold header
         $no = 1; // nomor data dimulai dari 1
         $baris = 2; // baris data dimulai dari baris ke 2
         foreach ($level as $key => $value) {
