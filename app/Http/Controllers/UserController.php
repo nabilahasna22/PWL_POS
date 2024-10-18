@@ -6,7 +6,9 @@ use App\Models\LevelModel;
 use App\Models\UserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -31,7 +33,7 @@ class UserController extends Controller
    // Ambil data user dalam bentuk json untuk datatables
    public function list(Request $request)
    {
-       $users = UserModel::select('user_id', 'username', 'nama', 'level_id')
+       $users = UserModel::select('user_id', 'username', 'nama','foto', 'level_id')
            ->with('level');
 
         // filter data user berdasarkan level_id
@@ -92,34 +94,6 @@ class UserController extends Controller
         return redirect('/user')->with('success', 'Data user berhasil disimpan');
     }
 
-    public function store_ajax(Request $request)
-    {
-        // cek apakah request berupa ajax
-        if ($request->ajax() || $request->wantsJson()) {
-            $rules = [
-                'level_id'  => 'required|integer',
-                'username'  => 'required|string|min:3|unique:m_user,username',
-                'nama'      => 'required|string|max:100',
-                'password'  => 'required|min:6'
-            ];
-            // use Illuminate\Support\Facades\Validator;
-            $validator = Validator::make($request->all(), $rules);
-            if ($validator->fails()) {
-                return response()->json([
-                    'status'    => false, // response status, false: error/gagal, true: berhasil
-                    'message'   => 'Validasi Gagal',
-                    'msgField'  => $validator->errors(), // pesan error validasi
-                ]);
-            }
-            UserModel::create($request->all());
-            return response()->json([
-                'status'    => true,
-                'message'   => 'Data user berhasil disimpan'
-            ]);
-        }
-        redirect('/');
-    }
-
     // Menampilkan detail user
     public function show(string $id)
     {
@@ -177,6 +151,37 @@ class UserController extends Controller
         return redirect('/user')->with("success", "Data user berhasil diubah");
     }
 
+    public function store_ajax(Request $request)
+    {
+        // cek apakah request berupa ajax
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'level_id'  => 'required|integer',
+                'username'  => 'required|string|min:3|unique:m_user,username',
+                'nama'      => 'required|string|max:100',
+                'password'  => 'required|min:6',
+                'foto'      => 'image|mimes:jpeg,png,jpg|max:2408'
+            ];
+            // use Illuminate\Support\Facades\Validator;
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'    => false, // response status, false: error/gagal, true: berhasil
+                    'message'   => 'Validasi Gagal',
+                    'msgField'  => $validator->errors(), // pesan error validasi
+                ]);
+            }
+            $fileName = time() . $request->file('foto')->getClientOriginalExtension();
+            $path = $request->file('foto')->storeAs('images', $fileName);
+            $request['foto'] = '/storage/' . $path;
+            UserModel::create($request->all());
+            return response()->json([
+                'status'    => true,
+                'message'   => 'Data user berhasil disimpan'
+            ]);
+        }
+        redirect('/');
+    }
     //Update Ajax
     public function update_ajax(Request $request, $id)
     {
@@ -186,7 +191,9 @@ class UserController extends Controller
                 'level_id' => 'required|integer',
                 'username' => 'required|max:20|unique:m_user,username,' . $id . ',user_id',
                 'nama' => 'required|max:100',
-                'password' => 'nullable|min:6|max:20'
+                'password' => 'nullable|min:6|max:20',
+                'foto'      => 'image|mimes:jpeg,png,jpg|max:2408'
+
             ];
             // use Illuminate\Support\Facades\Validator;
             $validator = Validator::make($request->all(), $rules);
@@ -201,6 +208,12 @@ class UserController extends Controller
             if ($check) {
                 if (!$request->filled('password')) { // jika password tidak diisi, maka hapus dari request
                     $request->request->remove('password');
+                }
+                $fileName = time() . $request->file('foto')->getClientOriginalExtension();
+                $path = $request->file('foto')->storeAs('images', $fileName);
+                $request['foto'] = '/storage/' . $path;
+                if (!$request->filled('foto')) { // jika password tidak diisi, maka hapus dari request 
+                    $request->request->remove('foto');
                 }
                 $check->update($request->all());
                 return response()->json([
@@ -334,11 +347,10 @@ class UserController extends Controller
         // load library excel
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', 'No');
-        $sheet->setCellValue('B1', 'Username');
-        $sheet->setCellValue('C1', 'Nama');
-        $sheet->setCellValue('D1', 'Level Pengguna');
-        $sheet->getStyle('A1:D1')->getFont()->setBold(true);  //bold header
+        $sheet->setCellValue('A1', 'Username');
+        $sheet->setCellValue('B1', 'Nama');
+        $sheet->setCellValue('C1', 'Level Pengguna');
+        $sheet->getStyle('A1:C1')->getFont()->setBold(true);  //bold header
         $no = 1;    //nomor data dimulai dari 1
         $baris = 2; //baris data dimulai dari baris 2
         foreach ($user as $key => $value){

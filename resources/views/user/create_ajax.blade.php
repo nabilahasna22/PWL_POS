@@ -1,4 +1,4 @@
-<form action="{{ url('/user/ajax') }}" method="POST" id="form-tambah">
+<form action="{{ url('/user/ajax') }}" method="POST" id="form-tambah" enctype="multipart/form-data">
     @csrf
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -32,6 +32,12 @@
                     <input value="" type="password" name="password" id="password" class="form-control" required>
                     <small id="error-password" class="error-text form-text text-danger"></small>
                 </div>
+                <div class="form-group">
+                    <label>Foto</label>
+                    <input value="" type="file" name="foto" id="foto" class="form-control" accept=".png,.jpg,.jpeg">
+                    <small class="form-text text-muted">Abaikan jika tidak ingin ubah foto
+                    <small id="error-foto" class="error-text form-text text-danger"></small>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" data-dismiss="modal" class="btn btn-warning">Batal</button>
@@ -62,13 +68,19 @@
                     required: true,
                     minlength: 6,
                     maxlength: 20
-                }
+                },
+                foto: {
+                    accept: "png,jpg,jpeg"
+                },
             },
             submitHandler: function(form) {
+                var formData = new FormData(form);
                 $.ajax({
                     url: form.action,
                     type: form.method,
-                    data: $(form).serialize(),
+                    data: formData,
+                        processData: false, // setting processData dan contentType ke false, untuk menghandle file 
+                        contentType: false,
                     success: function(response) {
                         if (response.status) {
                             $('#myModal').modal('hide');
