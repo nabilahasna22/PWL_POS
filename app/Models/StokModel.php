@@ -21,4 +21,15 @@ class StokModel extends Model
     {
         return $this->belongsTo(UserModel::class, 'user_id','user_id');
     }
+    public function getRoleName(): string
+    {
+        return $this->stok->levelsupplier_nama;
+    }
+    public function hasRole($role): bool
+    {
+        return $this->stok->supplier_kode == $role;
+    }
+    public function getRole(){
+        return $this->stok->supplier_alamat;
+    }
 }

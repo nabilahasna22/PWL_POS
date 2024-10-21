@@ -140,14 +140,24 @@ Route::group(['prefix' => 'supplier'], function () {
 
 Route::middleware(['authorize:ADM,MNG,STF,CUS'])->group(function () {
 Route::group(['prefix' => 'stok'], function () {
-    Route::get('/', [StokController::class, 'index']);              // menampilkan halaman awal stok
-    Route::post('/list', [StokController::class, 'list']);          // menampilkan data stok dalam bentuk json untuk datatables
-    Route::get('/create', [StokController::class, 'create']);       // menampilkan form tambah stok
-    Route::post('/', [StokController::class, 'store']);             // menyimpan data stok baru
-    Route::get('/{id}', [StokController::class, 'show']);           // menampilkan detail stok
-    Route::get('/{id}/edit', [StokController::class, 'edit']);      // menampilkan form edit stok
-    Route::put('/{id}', [StokController::class, 'update']);         // menyimpan perubahan data stok
-    Route::delete('/{id}', [StokController::class, 'destroy']);      // menghapus data stok
+    Route::get('/', [StokController::class, 'index']);          // menampilkan halaman awal stok
+    Route::post('/list', [StokController::class, 'list']);      // menampilkan data stok dalam bentuk json untuk datatables
+    Route::get('/create', [StokController::class, 'create']);   // menampilkan halaman form tambah stok
+    Route::get('/create_ajax', [StokController::class, 'create_ajax']);
+    Route::post('/ajax', [StokController::class, 'store_ajax']);
+    Route::post('/', [StokController::class, 'store']);         // menyimpan data stok baru
+    Route::get('/import', [StokController::class, 'import']);
+    Route::post('/import_ajax', [StokController::class, 'import_ajax']);
+    Route::get('/export_excel', [StokController::class, 'export_excel']); // export excel
+    Route::get('/export_pdf', [StokController::class, 'export_pdf']); // export pdf
+    Route::get('/{id}', [StokController::class, 'show']);       // menampilkan detail stok
+    Route::get('/{id}/edit', [StokController::class, 'edit']);  // menampilkan halaman form edit stok
+    Route::put('/{id}', [StokController::class, 'update']);     // menyimpan perubahan data stok
+    Route::get('/{id}/edit_ajax', [StokController::class, 'edit_ajax']);
+    Route::put('/{id}/update_ajax', [StokController::class, 'update_ajax']);
+    Route::get('/{id}/delete_ajax', [StokController::class, 'confirm_ajax']);
+    Route::delete('/{id}/delete_ajax', [StokController::class, 'delete_ajax']);
+    Route::delete('/{id}', [StokController::class, 'destroy']); // menghapus data stok
 });
 });
 
