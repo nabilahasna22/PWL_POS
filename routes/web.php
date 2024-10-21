@@ -10,6 +10,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\DetailController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::pattern('id', '[0-9]+'); //artinya ketika ada parameter (id), maka harus berupa angka
@@ -207,5 +208,11 @@ Route::middleware(['authorize:ADM,MNG,STF'])->group(function () {
     });
     });
 
-
+    Route::middleware(['authorize:ADM,MNG,STF,CUS'])->group(function(){
+        Route::get('/profile', [ProfileController::class, 'index']);
+        Route::get('/profile/{id}/edit_ajax', [ProfileController::class, 'edit_ajax']);
+        Route::put('/profile/{id}/update_ajax', [ProfileController::class, 'update_ajax']);
+        Route::get('/profile/{id}/edit_foto', [ProfileController::class, 'edit_foto']);
+        Route::put('/profile/{id}/update_foto', [ProfileController::class, 'update_foto']);
+    });
 });

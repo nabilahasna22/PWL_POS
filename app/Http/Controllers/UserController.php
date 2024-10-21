@@ -33,15 +33,15 @@ class UserController extends Controller
    // Ambil data user dalam bentuk json untuk datatables
    public function list(Request $request)
    {
-       $users = UserModel::select('user_id', 'username', 'nama','foto', 'level_id')
+       $user = UserModel::select('user_id', 'username', 'nama','foto', 'level_id')
            ->with('level');
 
         // filter data user berdasarkan level_id
         if ($request->level_id) {
-            $users->where('level_id', $request->level_id);
+            $user->where('level_id', $request->level_id);
         }
 
-       return DataTables::of($users)
+       return DataTables::of($user)
            // menambahkan kolom index / no urut (default nama kolom: DT_RowIndex)
            ->addIndexColumn()
            ->addColumn('aksi', function ($user) { // menambahkan kolom aksi              
@@ -160,7 +160,7 @@ class UserController extends Controller
                 'username'  => 'required|string|min:3|unique:m_user,username',
                 'nama'      => 'required|string|max:100',
                 'password'  => 'required|min:6',
-                'foto'      => 'image|mimes:jpeg,png,jpg|max:2408'
+                'foto'      => 'nullable|mimes:jpeg,png,jpg|max:2408'
             ];
             // use Illuminate\Support\Facades\Validator;
             $validator = Validator::make($request->all(), $rules);
@@ -171,10 +171,20 @@ class UserController extends Controller
                     'msgField'  => $validator->errors(), // pesan error validasi
                 ]);
             }
-            $fileName = time() . $request->file('foto')->getClientOriginalExtension();
-            $path = $request->file('foto')->storeAs('images', $fileName);
-            $request['foto'] = '/storage/' . $path;
-            UserModel::create($request->all());
+            if ($request->has('foto')) {
+                $file = $request->file('foto');
+                $extension = $file->getClientOriginalExtension();
+                $filename = time() . '.' . $extension;
+                $path = 'image/profile/';
+                $file->move($path, $filename);
+            }
+            UserModel::create([
+                'username'  => $request->username,
+                'nama'      => $request->nama,
+                'password'  => bcrypt($request->password),
+                'level_id'  => $request->level_id,
+                'foto'      => $path . $filename
+            ]);
             return response()->json([
                 'status'    => true,
                 'message'   => 'Data user berhasil disimpan'
@@ -192,7 +202,7 @@ class UserController extends Controller
                 'username' => 'required|max:20|unique:m_user,username,' . $id . ',user_id',
                 'nama' => 'required|max:100',
                 'password' => 'nullable|min:6|max:20',
-                'foto'      => 'image|mimes:jpeg,png,jpg|max:2408'
+                'foto'      => 'nullable|mimes:jpeg,png,jpg|max:2408'
 
             ];
             // use Illuminate\Support\Facades\Validator;
@@ -209,13 +219,34 @@ class UserController extends Controller
                 if (!$request->filled('password')) { // jika password tidak diisi, maka hapus dari request
                     $request->request->remove('password');
                 }
-                $fileName = time() . $request->file('foto')->getClientOriginalExtension();
-                $path = $request->file('foto')->storeAs('images', $fileName);
-                $request['foto'] = '/storage/' . $path;
+                if (isset($check->foto)) {
+                    $fileold = $check->foto;
+                    if (Storage::disk('public')->exists($fileold)) {
+                        Storage::disk('public')->delete($fileold);
+                    }
+                    $file = $request->file('foto');
+                    $filename = $check->foto;
+                    $path = 'image/profile/';
+                    $file->move($path, $filename);
+                    $pathname = $filename;
+                } else {
+                        $file = $request->file('foto');
+                        $extension = $file->getClientOriginalExtension();
+                        $filename = time() . '.' . $extension;
+                        $path = 'image/profile/';
+                        $file->move($path, $filename);
+                        $pathname = $path . $filename;
+                }
                 if (!$request->filled('foto')) { // jika password tidak diisi, maka hapus dari request 
                     $request->request->remove('foto');
                 }
-                $check->update($request->all());
+                $check->update([
+                    'username'  => $request->username,
+                    'nama'      => $request->nama,
+                    'password'  => $request->password ? bcrypt($request->password) : UserModel::find($id)->password,
+                    'level_id'  => $request->level_id,
+                    'foto'      => $pathname
+                ]);
                 return response()->json([
                     'status' => true,
                     'message' => 'Data berhasil diupdate'

@@ -20,6 +20,9 @@ class AuthController extends Controller
         if ($request->ajax() || $request->wantsJson()) {
             $credentials = $request->only('username', 'password');
             if (Auth::attempt($credentials)) {
+                session([
+                    'user_id'=>Auth::user()->user_id
+                ]);
                 return response()->json([
                     'status' => true,
                     'message' => 'Login Berhasil',

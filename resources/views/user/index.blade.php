@@ -19,7 +19,7 @@
             @if (session('error'))
                 <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
-            <div class="row">
+            <div class= id="filter" class="form-horizontal filter-date p-2 border-bottom mb-2">
                 <div class="col-md-12">
                     <div class="form-group row">
                         <label class="col-1 control-label col-form-label">Filter:</label>
@@ -30,7 +30,7 @@
                                     <option value="{{ $item->level_id }}">{{ $item->level_nama }}</option>
                                 @endforeach
                             </select>
-                            <small class="form-text text-muted">Level Pengguna</small>
+                            <small class="form-text text-muted">Level</small>
                         </div>
                     </div>
                 </div>
@@ -88,13 +88,15 @@
                 }, {
                     data: "nama",
                     className: "",
+                    width: "25%",
                     orderable: true,
                     searchable: true
                 }, {
                     // mengambil data level hasil dari ORM berelasi
                     data: "level.level_nama",
                     className: "",
-                    orderable: false,
+                    width: "14%",
+                    orderable: true,
                     searchable: false
                 }, 
                 {
@@ -103,6 +105,14 @@
                     width: "14%",
                     orderable: false,
                     searchable: false
+                    "render": function(data) {
+                            // Check if data exists
+                            if (data) {
+                                // Construct the image URL using Blade syntax
+                                return '<img src="{{ asset('') }}/' + data + '" width="50px" alt="User Photo"/>';
+                            }
+                            return 'Foto Kosong'; // Return empty if no data
+                    }
                 }, 
                 {
                     data: "aksi",
