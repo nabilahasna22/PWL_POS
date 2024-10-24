@@ -6,6 +6,7 @@
         <div class="row" id="profile">
             <div class="col-md-4 border-right">
                 <div class="p-3 py-5">
+
                     <div class="d-flex flex-column align-items-center text-center p-3 "><img class="rounded mt-3 mb-2"
                             width="250px" src=" {{ asset($user->foto) }} ">
                     </div>
@@ -51,6 +52,7 @@
                 </div>
             </div>
             <div class="col-md-4">
+
             </div>
         </div>
     </div>

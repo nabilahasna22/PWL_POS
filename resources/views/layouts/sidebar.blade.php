@@ -76,15 +76,18 @@
                 </a>
               </li>
               <!-- Menambahkan Menu Logout -->
-            <li class="nav-item">
-              <a href="{{ url('logout') }}" class="nav-link"
-                  onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                  <i class="nav-icon fas fa-sign-out-alt"></i>
-                  <p>Logout</p>
-              </a>
-              <form id="logout-form" action="{{ url('logout') }}" method="GET" style="display: none;">
-              </form>
-          </li>
+              <li class="nav-header">Logout</li>
+              <li class="nav-item">
+                <a href="{{ url('logout') }}" class="nav-link"
+                   style="background-color: red; color: white;"
+                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                   <i class="nav-icon fas fa-sign-out-alt"></i>
+                   <p>Logout</p>
+                </a>
+                <form id="logout-form" action="{{ url('logout') }}" method="GET" style="display: none;">
+                </form>
+              </li>
+              
         </ul>
       </nav>
     </div>

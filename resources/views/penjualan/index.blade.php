@@ -69,17 +69,10 @@
                 <div class="card-header">
                     <h3 class="card-title">{{ $page->title }}</h3>
                     <div class="card-tools">
-                        <button onclick="modalAction('{{ url('/detail/import') }}')" class="btn btn-info">Import
-                            Detail</button>
-                        <a href="{{ url('/detail/export_excel') }}" class="btn btn-primary"><i
-                                class="fa fa-file-excel"></i>
-                            Export Detail</a>
-                        <a href="{{ url('/detail/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i>
-                            Export
-                            Detail</a>
-                        <button onclick="modalAction('{{ url('/detail/create_ajax') }}')" class="btn btn-success">Tambah
-                            Data
-                            (Ajax)</button>
+                        <button onclick="modalAction('{{ url('/detail/import') }}')" class="btn btn-info">Import Data</button>
+                        <a href="{{ url('/detail/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export Excel</a>
+                        <a href="{{ url('/detail/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i>Export PDF</a>
+                        <button onclick="modalAction('{{ url('/detail/create_ajax') }}')" class="btn btn-success">Tambah Data(Ajax)</button>
                     </div>
                 </div>
                 <div class="card-body">

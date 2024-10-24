@@ -10,26 +10,7 @@
             <button onclick="modalAction('{{ url('/level/create_ajax') }}')" class="btn btn-success">Tambah Data (Ajax)</button>
         </div>
     </div>
-    <div class="card-body">
-        <!-- untuk Filter data -->
-        <div id="filter" class="form-horizontal filter-date p-2 border-bottom mb-2">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group form-group-sm row text-sm mb-0">
-                        <label for="filter_level" class="col-md-1 col-form-label">Filter</label>
-                        <div class="col-md-3">
-                            <select name="filter_level" class="form-control form-control-sm filter_level">
-                                <option value="">- Semua -</option> 
-                                {{-- @foreach($levels as $level)
-                                    <option value="{{ $level->level_id }}">{{ $level->level_nama }}</option>
-                                @endforeach --}}
-                            </select>
-                            <small class="form-text text-muted">Filter Level</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="card-body">        
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif

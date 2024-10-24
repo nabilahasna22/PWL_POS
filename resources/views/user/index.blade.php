@@ -9,7 +9,7 @@
                 <button onclick="modalAction('{{ url('/user/import') }}')" class="btn btn-info">Import Data </button> 
                   <a href="{{ url('/user/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export Excel</a> 
                 <a href="{{ url('/user/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export PDF</a> 
-                <button onclick="modalAction('{{ url('user/create_ajax')}}')" class="btn btn-success mt-1">Tambah Data (Ajax)</button>
+                <button onclick="modalAction('{{ url('user/create_ajax')}}')" class="btn btn-success">Tambah Data (Ajax)</button>
             </div>
         </div>
         <div class="card-body">
@@ -53,77 +53,75 @@
 @push('css')
 @endpush
 @push('js')
-    <script>
-        function modalAction(url = '') {
-            $('#myModal').load(url, function() {
-                $('#myModal').modal('show');
-            });
-        }
-        var dataUser;
-        $(document).ready(function() {
-            dataUser = $('#table_user').DataTable({
-                // serverSide: true, jika ingin menggunakan server side processing
-                serverSide: true,
-                ajax: {
-                    "url": "{{ url('user/list') }}",
-                    "dataType": "json",
-                    "type": "POST",
-                    "data": function(d){
-                        d.level_id=$('#level_id').val();
-                    }
-                },
-                columns: [{
-                    // nomor urut dari laravel datatable addIndexColumn()
-                    data: "DT_RowIndex",
-                    className: "text-center",
-                    orderable: false,
-                    searchable: false
-                }, {
-                    data: "username",
-                    className: "",
-                    // orderable: true, jika ingin kolom ini bisa diurutkan
-                    orderable: true,
-                    // searchable: true, jika ingin kolom ini bisa dicari
-                    searchable: true
-                }, {
-                    data: "nama",
-                    className: "",
-                    width: "25%",
-                    orderable: true,
-                    searchable: true
-                }, {
-                    // mengambil data level hasil dari ORM berelasi
-                    data: "level.level_nama",
-                    className: "",
-                    width: "14%",
-                    orderable: true,
-                    searchable: false
-                }, 
-                {
-                    data: "foto",
-                    className: "",
-                    width: "14%",
-                    orderable: false,
-                    searchable: false
-                    "render": function(data) {
-                            // Check if data exists
-                            if (data) {
-                                // Construct the image URL using Blade syntax
-                                return '<img src="{{ asset('') }}/' + data + '" width="50px" alt="User Photo"/>';
-                            }
-                            return 'Foto Kosong'; // Return empty if no data
-                    }
-                }, 
-                {
-                    data: "aksi",
-                    className: "",
-                    orderable: false,
-                    searchable: false
-                }]
-            });
-            $('#level_id').on('change', function(){
-              dataUser.ajax.reload();
-            });
+<script> 
+    function modalAction(url = '') {
+        $('#myModal').load(url, function() {
+            $('#myModal').modal('show');
         });
-    </script>
+    }
+    var dataUser;
+    $(document).ready(function() {
+        dataUser = $('#table_user').DataTable({
+            // serverSide: true, jika ingin menggunakan server side processing
+            serverSide: true,
+            ajax: {
+                "url": "{{ url('user/list') }}",
+                "dataType": "json",
+                "type": "POST",
+                "data": function(d){
+                    d.level_id=$('#level_id').val();
+                }
+            },
+            columns: [{
+                // nomor urut dari laravel datatable addIndexColumn()
+                data: "DT_RowIndex",
+                className: "text-center",
+                orderable: false,
+                searchable: false
+            }, {
+                data: "username",
+                className: "",
+                // orderable: true, jika ingin kolom ini bisa diurutkan
+                orderable: true,
+                // searchable: true, jika ingin kolom ini bisa dicari
+                searchable: true
+            }, {
+                data: "nama",
+                className: "",
+                width: "25%",
+                orderable: true,
+                searchable: true
+            }, {
+                // mengambil data level hasil dari ORM berelasi
+                data: "level.level_nama",
+                className: "",
+                width: "14%",
+                orderable: true,
+                searchable: false
+            }, {
+                data: "foto",
+                className: "",
+                width: "14%",
+                orderable: false,
+                searchable: false,
+                "render": function(data) {
+                    // Check if data exists
+                    if (data) {
+                        // Construct the image URL using Blade syntax
+                        return '<img src="{{ asset('') }}/' + data + '" width="50px" alt="User Photo"/>';
+                    }
+                    return 'Foto Kosong'; // Return empty if no data
+                }
+            }, {
+                data: "aksi",
+                className: "",
+                orderable: false,
+                searchable: false
+            }]
+        });
+        $('#level_id').on('change', function(){
+          dataUser.ajax.reload();
+        });
+    });
+</script>
 @endpush

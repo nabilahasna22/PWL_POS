@@ -1,10 +1,13 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Models\LevelModel;
 use App\Models\UserModel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+
 class ProfileController extends Controller
 {
     public function index()
@@ -20,8 +23,9 @@ class ProfileController extends Controller
         $activeMenu = 'profile'; // set menu yang sedang aktif
         $user = UserModel::with('level')->find($id);
         $level = LevelModel::all(); // ambil data level untuk filter level
-        return view('profile.index', ['breadcrumb' => $breadcrumb, 'page' => $page, 'level' => $level, 'user' => $user,'activeMenu' => $activeMenu]);
+        return view('profile.index', ['breadcrumb' => $breadcrumb, 'page' => $page, 'level' => $level, 'user' => $user, 'activeMenu' => $activeMenu]);
     }
+
     public function show(string $id)
     {
         $user = UserModel::with('level')->find($id);
@@ -30,12 +34,14 @@ class ProfileController extends Controller
         $activeMenu = 'user'; // set menu yang sedang aktif
         return view('user.show', ['breadcrumb' => $breadcrumb, 'page' => $page, 'user' => $user, 'activeMenu' => $activeMenu]);
     }
+
     public function edit_ajax(string $id)
     {
         $user = UserModel::find($id);
         $level = LevelModel::select('level_id', 'level_nama')->get();
         return view('profile.edit_ajax', ['user' => $user, 'level' => $level]);
     }
+
     public function update_ajax(Request $request, $id)
     {
         // cek apakah request dari ajax
@@ -88,12 +94,14 @@ class ProfileController extends Controller
         }
         return redirect('/');
     }
+
     public function edit_foto(string $id)
     {
         $user = UserModel::find($id);
         $level = LevelModel::select('level_id', 'level_nama')->get();
-        return view('profile.edit_foto', ['user' => $user, 'level'=>$level]);
+        return view('profile.edit_foto', ['user' => $user, 'level' => $level]);
     }
+
     public function update_foto(Request $request, $id)
     {
         // cek apakah request dari ajax
@@ -113,6 +121,7 @@ class ProfileController extends Controller
             $check = UserModel::find($id);
             if ($check) {
                 if ($request->has('foto')) {
+
                     if (isset($check->foto)) {
                         $fileold = $check->foto;
                         if (Storage::disk('public')->exists($fileold)) {
@@ -126,7 +135,9 @@ class ProfileController extends Controller
                     } else {
                         $file = $request->file('foto');
                         $extension = $file->getClientOriginalExtension();
+
                         $filename = time() . '.' . $extension;
+
                         $path = 'image/profile/';
                         $file->move($path, $filename);
                         $pathname = $path . $filename;

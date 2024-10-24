@@ -43,7 +43,8 @@ class PenjualanController extends Controller
         return DataTables::of($penjualan)
             ->addIndexColumn() // menambahkan kolom index / no urut (default nama kolom: DT_RowIndex) 
             ->addColumn('aksi', function ($penjualan) { // menambahkan kolom aksi 
-                $btn = '<a href="' . url('/penjualan/' . $penjualan->penjualan_id) . '" class="btn btn-info btn-sm">Detail</a> ';
+                //$btn = '<a href="' . url('/penjualan/' . $penjualan->penjualan_id) . '" class="btn btn-info btn-sm">Detail</a> ';
+                $btn = '<button onclick="modalAction(\'' . url('/penjualan/' . $penjualan->penjualan_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
                 $btn .= '<button onclick="modalAction(\'' . url('/penjualan/' . $penjualan->penjualan_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
                 $btn .= '<button onclick="modalAction(\'' . url('/penjualan/' . $penjualan->penjualan_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
                 return $btn;
@@ -161,6 +162,21 @@ class PenjualanController extends Controller
         }
         return redirect('/');
     }
+    
+    public function show_ajax(string $id)
+    {
+        $penjualan = PenjualanModel::find($id);
+
+        if (!$penjualan) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Data level tidak ditemukan'
+            ]);
+        }
+
+        return view('penjualan.show_ajax', ['penjualan' => $penjualan]);
+    }
+
     public function import()
     {
         return view('penjualan.import');

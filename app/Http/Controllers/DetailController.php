@@ -41,16 +41,16 @@ class DetailController extends Controller
             $detail->where('barang_id', $request->barang_id);
         }
         return DataTables::of($detail)
-            ->addIndexColumn() // menambahkan kolom index / no urut (default nama kolom: DT_RowIndex) 
-            ->addColumn('aksi', function ($detail) { // menambahkan kolom aksi 
-                $btn = '<a href="' . url('/detail/' . $detail->detail_id) . '" class="btn btn-info btn-sm">Detail</a> ';
-                // $btn .= '<button onclick="modalAction(\'' . url('/detail/' . $detail->detail_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
-                $btn .= '<a onclick="modalAction(\'' . url('/detail/' . $detail->detail_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</a> ';
-                $btn .= '<button onclick="modalAction(\'' . url('/detail/' . $detail->detail_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
-                return $btn;
-            })
-            ->rawColumns(['aksi']) // memberitahu bahwa kolom aksi adalah html 
-            ->make(true);
+        ->addIndexColumn() // menambahkan kolom index / no urut (default nama kolom: DT_RowIndex) 
+        ->addColumn('aksi', function ($detail) { // menambahkan kolom aksi 
+            // $btn = '<a href="' . url('/level/' . $level->level_id) . '" class="btn btn-info btn-sm">Detail</a> '; //tidak menggunakan ajax
+            $btn = '<button onclick="modalAction(\'' . url('/detail/' . $detail->detail_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> '; //menggunakan ajax
+            $btn .= '<button onclick="modalAction(\'' . url('/detail/' . $detail->detail_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
+            $btn .= '<button onclick="modalAction(\'' . url('/detail/' . $detail->detail_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
+            return $btn;
+        })
+        ->rawColumns(['aksi']) // memberitahu bahwa kolom aksi adalah html 
+        ->make(true); 
     }
     public function show(string $id)
     {
@@ -162,6 +162,21 @@ class DetailController extends Controller
         }
         return redirect('/');
     }
+
+    public function show_ajax(string $id)
+    {
+        $detail = DetailModel::find($id);
+
+        if (!$detail) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Data level tidak ditemukan'
+            ]);
+        }
+
+        return view('detail.show_ajax', ['detail' => $detail]);
+    }
+    
     public function import()
     {
         return view('detail.import');
