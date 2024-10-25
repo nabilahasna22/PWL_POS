@@ -73,78 +73,74 @@
 @push('css')
 @endpush
 @push('js')
-    <script>
-        function modalAction(url = '') {
-            $('#myModal').load(url, function() {
-                $('#myModal').modal('show');
-            });
-        }
-        var datastok;
-        $(document).ready(function() {
-            datastok = $('#table-stok').DataTable({
-                // serverSide: true, jika ingin menggunakan server side processing
-                serverSide: true,
-                ajax: {
-                    "url": "{{ url('stok/list') }}",
-                    "dataType": "json",
-                    "type": "POST",
-                    "data": function(d) {
-                        d.supplier_nama = $('#supplier_nama').val();
-                        d.barang_nama = $('#barang_nama').val();
-                        d.user_nama = $('#username').val();
-                    }
-                },
-                columns: [{
-                    // nomor urut dari laravel datatable addIndexColumn()
-                    data: "DT_RowIndex",
-                    className: "text-center",
-                    orderable: false,
-                    searchable: false
-                }, {
-                    data: "supplier.supplier_nama",
-                    className: "",
-                    // orderable: true, jika ingin kolom ini bisa diurutkan
-                    orderable: true,
-                    // searchable: true, jika ingin kolom ini bisa dicari
-                    searchable: true
-                }, {
-                    data: "barang.barang_nama",
-                    className: "",
-                    orderable: true,
-                    searchable: true
-                }, {
-                    // mengambil data level hasil dari ORM berelasi
-                    data: "user.username",
-                    className: "",
-                    orderable: true,
-                    searchable: true
-                }, {
-                    data: "stok_tanggal",
-                    className: "",
-                    orderable: true,
-                    searchable: false
-                }, {
-                    data: "stok_jumlah",
-                    className: "",
-                    orderable: true,
-                    searchable: false
-                }, {
-                    data: "aksi",
-                    className: "",
-                    orderable: false,
-                    searchable: false
-                }]
-            });
-
-            $('#supplier_id').on('change', function() {
-                datastok.ajax.reload();
-            });
-            $('#barang_id').on('change', function() {
-                datastok.ajax.reload();
-            });
-            $('#user_id').on('change', function() {
-                datastok.ajax.reload();
-            });
+<script>
+    function modalAction(url = '') {
+        $('#myModal').load(url, function() {
+            $('#myModal').modal('show');
         });
-    </script>
+    }
+    var datastok;
+    $(document).ready(function() {
+        datastok = $('#table-stok').DataTable({
+            serverSide: true,
+            ajax: {
+                "url": "{{ url('stok/list') }}",
+                "dataType": "json",
+                "type": "POST",
+                "data": function(d) {
+                    d.supplier_id = $('#supplier_id').val(); // sesuai ID pada HTML
+                    d.barang_id = $('#barang_id').val(); // sesuai ID pada HTML
+                    d.user_id = $('#user_id').val(); // sesuai ID pada HTML
+                }
+            },
+            columns: [{
+                data: "DT_RowIndex",
+                className: "text-center",
+                orderable: false,
+                searchable: false
+            }, {
+                data: "supplier.supplier_nama",
+                className: "",
+                orderable: true,
+                searchable: true
+            }, {
+                data: "barang.barang_nama",
+                className: "",
+                orderable: true,
+                searchable: true
+            }, {
+                data: "user.username",
+                className: "",
+                orderable: true,
+                searchable: true
+            }, {
+                data: "stok_tanggal",
+                className: "",
+                orderable: true,
+                searchable: false
+            }, {
+                data: "stok_jumlah",
+                className: "",
+                orderable: true,
+                searchable: false
+            }, {
+                data: "aksi",
+                className: "",
+                orderable: false,
+                searchable: false
+            }]
+        });
+
+        // Reload data table ketika filter diubah
+        $('#supplier_id').on('change', function() {
+            datastok.ajax.reload();
+        });
+        $('#barang_id').on('change', function() {
+            datastok.ajax.reload();
+        });
+        $('#user_id').on('change', function() {
+            datastok.ajax.reload();
+        });
+    });
+</script>
 @endpush
