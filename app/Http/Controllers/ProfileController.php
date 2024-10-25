@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\LevelModel;
 use App\Models\UserModel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage; // tambahan
 
 class ProfileController extends Controller
 {
@@ -23,7 +23,7 @@ class ProfileController extends Controller
         $activeMenu = 'profile'; // set menu yang sedang aktif
         $user = UserModel::with('level')->find($id);
         $level = LevelModel::all(); // ambil data level untuk filter level
-        return view('profile.index', ['breadcrumb' => $breadcrumb, 'page' => $page, 'level' => $level, 'user' => $user, 'activeMenu' => $activeMenu]);
+        return view('profile.index', ['breadcrumb' => $breadcrumb, 'page' => $page, 'level' => $level, 'user' => $user,'activeMenu' => $activeMenu]);
     }
 
     public function show(string $id)
@@ -99,64 +99,67 @@ class ProfileController extends Controller
     {
         $user = UserModel::find($id);
         $level = LevelModel::select('level_id', 'level_nama')->get();
-        return view('profile.edit_foto', ['user' => $user, 'level' => $level]);
+        return view('profile.edit_foto', ['user' => $user, 'level'=>$level]);
     }
 
     public function update_foto(Request $request, $id)
-    {
-        // cek apakah request dari ajax
-        if ($request->ajax() || $request->wantsJson()) {
-            $rules = [
-                'foto'   => 'required|mimes:jpeg,png,jpg|max:4096'
-            ];
-            // use Illuminate\Support\Facades\Validator;
-            $validator = Validator::make($request->all(), $rules);
-            if ($validator->fails()) {
-                return response()->json([
-                    'status' => false, // respon json, true: berhasil, false: gagal
-                    'message' => 'Validasi gagal.',
-                    'msgField' => $validator->errors() // menunjukkan field mana yang error
-                ]);
-            }
-            $check = UserModel::find($id);
-            if ($check) {
-                if ($request->has('foto')) {
+{
+    // Cek apakah request dari AJAX
+    if ($request->ajax() || $request->wantsJson()) {
+        $rules = [
+            'foto' => 'required|mimes:jpeg,png,jpg|max:4096'
+        ];
 
-                    if (isset($check->foto)) {
-                        $fileold = $check->foto;
-                        if (Storage::disk('public')->exists($fileold)) {
-                            Storage::disk('public')->delete($fileold);
-                        }
-                        $file = $request->file('foto');
-                        $filename = $check->foto;
-                        $path = 'image/profile/';
-                        $file->move($path, $filename);
-                        $pathname = $filename;
-                    } else {
-                        $file = $request->file('foto');
-                        $extension = $file->getClientOriginalExtension();
-
-                        $filename = time() . '.' . $extension;
-
-                        $path = 'image/profile/';
-                        $file->move($path, $filename);
-                        $pathname = $path . $filename;
-                    }
-                }
-                $check->update([
-                    'foto'      => $pathname
-                ]);
-                return response()->json([
-                    'status' => true,
-                    'message' => 'Data berhasil diupdate'
-                ]);
-            } else {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Data tidak ditemukan'
-                ]);
-            }
+        // Validasi input
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validasi gagal.',
+                'msgField' => $validator->errors()
+            ]);
         }
-        return redirect('/');
+
+        // Cek apakah pengguna ada
+        $check = UserModel::find($id);
+        if ($check) {
+            // Jika ada file foto yang diunggah
+            if ($request->hasFile('foto')) {
+                // Nama file lama untuk dihapus
+                $oldFilePath = $check->foto; // Ambil path foto lama dari database
+
+                // Hapus foto lama jika ada
+                if ($oldFilePath && Storage::disk('public')->exists($oldFilePath)) {
+                    Storage::disk('public')->delete($oldFilePath);
+                }
+
+                // Proses penyimpanan foto baru
+                $file = $request->file('foto');
+                $extension = $file->getClientOriginalExtension();
+                $filename = time() . '.' . $extension;
+
+                // Simpan foto baru
+                $path = $file->storeAs('public/image/profile', $filename);
+                $publicPath = 'storage/image/profile/' . $filename; // Path publik untuk disimpan ke database
+
+                // Update foto di database
+                $check->update([
+                    'foto' => $publicPath
+                ]);
+            }
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data berhasil diupdate',
+                'new_photo_url' => $publicPath ?? $check->foto // Tambahkan URL foto baru untuk update tampilan
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Data tidak ditemukan'
+            ]);
+        }
     }
+    return redirect('/');
+}
 }

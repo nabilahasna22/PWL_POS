@@ -58,11 +58,11 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>supplier ID</th>
-                        <th>Barang ID</th>
-                        <th>User ID</th>
-                        <th>Stok tanggal</th>
-                        <th>Stok Jumlah</th>
+                        <th>Supplier</th>
+                        <th>Nama Barang</th>
+                        <th>User</th>
+                        <th>Tanggal Stok</th>
+                        <th>Jumlah Stok</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -89,9 +89,9 @@
                     "dataType": "json",
                     "type": "POST",
                     "data": function(d) {
-                        d.supplier_id = $('#supplier_id').val();
-                        d.barang_id = $('#barang_id').val();
-                        d.user_id = $('#user_id').val();
+                        d.supplier_nama = $('#supplier_nama').val();
+                        d.barang_nama = $('#barang_nama').val();
+                        d.user_nama = $('#username').val();
                     }
                 },
                 columns: [{
@@ -101,20 +101,20 @@
                     orderable: false,
                     searchable: false
                 }, {
-                    data: "supplier.supplier_id",
+                    data: "supplier.supplier_nama",
                     className: "",
                     // orderable: true, jika ingin kolom ini bisa diurutkan
                     orderable: true,
                     // searchable: true, jika ingin kolom ini bisa dicari
                     searchable: true
                 }, {
-                    data: "barang.barang_id",
+                    data: "barang.barang_nama",
                     className: "",
                     orderable: true,
                     searchable: true
                 }, {
                     // mengambil data level hasil dari ORM berelasi
-                    data: "user.user_id",
+                    data: "user.username",
                     className: "",
                     orderable: true,
                     searchable: true

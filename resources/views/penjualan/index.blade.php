@@ -208,13 +208,13 @@
                 }, {
                     data: "barang.barang_id",
                     className: "",
-                    width: "37%",
+                    width: "30%",
                     orderable: true,
                     searchable: false
                 }, {
                     data: "harga",
                     className: "",
-                    width: "14%",
+                    width: "17%",
                     orderable: true,
                     searchable: false
                 }, {

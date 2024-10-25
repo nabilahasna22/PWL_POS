@@ -31,16 +31,16 @@
                         <td class="col-9">{{ $stok->stok_id }}</td>
                     </tr>
                     <tr>
-                        <th class="text-right col-3">Supploer ID :</th>
-                        <td class="col-9">{{ $stok->supplier->supplier_id }}</td>
+                        <th class="text-right col-3">Supplier :</th>
+                        <td class="col-9">{{ $stok->supplier->supplier_nama}}</td>
                     </tr>
                     <tr>
-                        <th class="text-right col-3">Barang ID :</th>
-                        <td class="col-9">{{ $stok->barang->barang_id }}</td>
+                        <th class="text-right col-3">Nama Barang :</th>
+                        <td class="col-9">{{ $stok->barang->barang_nama }}</td>
                     </tr>
                     <tr>
-                        <th class="text-right col-3">User ID :</th>
-                        <td class="col-9">{{ $stok->user->user_id }}</td>
+                        <th class="text-right col-3">User :</th>
+                        <td class="col-9">{{ $stok->user->username }}</td>
                     </tr>
                     <tr>
                         <th class="text-right col-3">Tanggal Stok :</th>
