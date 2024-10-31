@@ -13,6 +13,7 @@ use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
+
 class UserController extends Controller
 {
    //Menampilkan halaman awal user
@@ -45,7 +46,7 @@ class UserController extends Controller
            // menambahkan kolom index / no urut (default nama kolom: DT_RowIndex)
            ->addIndexColumn()
            ->addColumn('aksi', function ($user) { // menambahkan kolom aksi              
-                $btn = '<button onclick="modalAction(\'' . url('/user/' . $user->user_id . '/show') . '\')" class="btn btn-info btn-sm">Detail</button> ';
+                $btn = '<button onclick="modalAction(\'' . url('/user/' . $user->user_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
                 $btn .= '<button onclick="modalAction(\'' . url('/user/' . $user->user_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
                 $btn .= '<button onclick="modalAction(\'' . url('/user/' . $user->user_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
                 return $btn;               
@@ -102,7 +103,19 @@ class UserController extends Controller
         $activeMenu = 'user'; // set menu yang sedang aktif
         return view('user.show', ['breadcrumb' => $breadcrumb, 'page' => $page, 'user' => $user, 'activeMenu' => $activeMenu]);
     }
+    public function show_ajax(string $id)
+    {
+        $user = UserModel::find($id);
 
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Data level tidak ditemukan'
+            ]);
+        }
+
+        return view('user.show_ajax', ['user' => $user]);
+    }
     // Menampilkan halaman form edit user 
     public function edit(string $id)
     {
