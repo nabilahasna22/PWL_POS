@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\KategoriController;
 use App\Http\Controllers\Api\BarangController;
 use App\Http\Controllers\Api\PenjualanController; 
+use App\Http\Controllers\Api\DetailController; 
 use App\Http\Controllers\Api\SupplierController;
 use App\Http\Controllers\Api\StokController;
 
@@ -51,6 +52,12 @@ Route::post('penjualan', [PenjualanController::class, 'store']);
 Route::get('penjualan/{penjualan}', [PenjualanController::class, 'show']);
 Route::put('penjualan/{penjualan}', [PenjualanController::class, 'update']);
 Route::delete('penjualan/{penjualan}', [PenjualanController::class, 'destroy']);
+
+Route::get('detail', [DetailController::class, 'index']);
+Route::post('detail', [DetailController::class, 'store']);
+Route::get('detail/{detail}', [DetailController::class, 'show']);
+Route::put('detail/{detail}', [DetailController::class, 'update']);
+Route::delete('detail/{detail}', [DetailController::class, 'destroy']);
 
 // Route::post('/register', App\Http\Controllers\Api\RegisterController::class)->name('register');
 Route::post('/register1', App\Http\Controllers\Api\RegisterController::class)->name('register1');
